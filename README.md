@@ -76,36 +76,6 @@ Edit `config.toml` to customize:
 - **Profit Thresholds**: Set minimum profit requirements
 - **Trade Parameters**: Adjust trade sizes and gas estimates
 
-### Running the Bot
-
-```bash
-# Run with default config
-cargo run
-
-# Run with custom config
-cargo run -- --config custom_config.toml
-
-# Dry run mode (no database writes)
-cargo run -- --dry-run
-```
-
-## Supported DEXes
-
-### Currently Implemented
-- **Uniswap V2** on Polygon
-- **QuickSwap** (Uniswap V2 fork)
-
-### Easy to Add
-- **SushiSwap** (included but disabled by default)
-- **Any Uniswap V2 compatible DEX**
-
-## Token Pairs
-
-Currently supports:
-- **WETH/USDC**
-- **WBTC/USDC**
-
-Additional pairs can be easily added by extending the configuration and detection logic.
 
 ## Key Metrics
 
@@ -117,55 +87,6 @@ The bot tracks several important metrics:
 - **Gas Cost**: Estimated transaction costs
 - **Liquidity**: Available liquidity (when implemented)
 
-## Risk Considerations
-
-⚠️ **Important**: This is a simulation tool for educational purposes. Real arbitrage involves:
-
-- **Slippage**: Price impact during execution
-- **MEV Competition**: Other bots competing for opportunities
-- **Gas Price Fluctuations**: Network congestion affects costs
-- **Smart Contract Risk**: DEX contract vulnerabilities
-- **Impermanent Loss**: Price changes during execution
-
-## Development
-
-### Adding New DEXes
-
-1. Implement the `DexPriceFetcher` trait
-2. Add configuration in `config.toml`
-3. Register in `DexManager::new()`
-
-Example:
-```rust
-pub struct NewDexFetcher {
-    // Implementation
-}
-
-impl DexPriceFetcher for NewDexFetcher {
-    async fn get_price(&self, token_pair: &TokenPair) -> Result<PriceQuote> {
-        // Price fetching logic
-    }
-    
-    fn get_name(&self) -> &str {
-        "New DEX"
-    }
-}
-```
-
-### Adding New Token Pairs
-
-1. Add token configurations to `config.toml`
-2. Extend `check_arbitrage_opportunities()` in `ArbitrageDetector`
-
-### Testing
-
-```bash
-# Run unit tests
-cargo test
-
-# Run with logging
-RUST_LOG=debug cargo test -- --nocapture
-```
 
 ## Monitoring
 
