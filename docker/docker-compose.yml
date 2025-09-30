@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  arbitrage-bot:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: polygon-arbitrage-bot
+    restart: unless-stopped
+    volumes:
+      - ./config.toml:/app/config.toml:ro
+      - bot-data:/app/data
+    environment:
+      - RUST_LOG=info
+      - DATABASE_URL=sqlite:/app/data/arbitrage.db
+    healthcheck:
+      test: ["CMD", "pgrep", "polygon-arbitrage-bot"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Web dashboard (future enhancement)
+  # dashboard:
+  #   image: grafana/grafana:latest
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - grafana-data:/var/lib/grafana
+
+volumes:
+  bot-data:
+  grafana-data:
